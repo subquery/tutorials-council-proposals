@@ -1,17 +1,18 @@
-type StarterEntity @entity {
+type Proposals @entity {
+	id: ID!
+	index: String!
+	account: String
+	hash: String
+	voteThreshold: String
+	block: BigInt
+}
 
-  id: ID! #id is a required field
-
-  field1: Int!
-
-  field2: String #filed2 is an optional field
-
-  field3: BigInt
-
-  field4: Date
-
-  field5: Boolean
-
-
-
+type Votes @entity {
+	id: ID!
+	proposalHash: String!
+	approvedVote: String!
+	account: String
+	votedYes: String
+	votedNo: String
+	block: BigInt
 }

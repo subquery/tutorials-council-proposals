@@ -11,12 +11,13 @@ dataSources:
     startBlock: 1
     mapping:
       handlers:
-        - handler: handleBlock
-          kind: substrate/BlockHandler
-        - handler: handleEvent
+        - handler: handleCouncilProposedEvent
           kind: substrate/EventHandler
           filter:
-            module: balances
-            method: Deposit
-        - handler: handleCall
-          kind: substrate/CallHandler
+            module: council
+            method: Proposed
+        - handler: handleCouncilVotedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: council
+            method: Voted
