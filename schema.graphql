@@ -1,18 +1,25 @@
-type Proposals @entity {
-	id: ID!
-	index: String!
-	account: String
-	hash: String
-	voteThreshold: String
-	block: BigInt
+type Proposal @entity {
+  id: ID!
+  index: String!
+  account: String
+  hash: String
+  voteThreshold: String
+  block: BigInt
+  votes: [Vote] @derivedFrom(field: "proposalHash")
 }
 
-type Votes @entity {
-	id: ID!
-	proposalHash: String!
-	approvedVote: String!
-	account: String
-	votedYes: String
-	votedNo: String
-	block: BigInt
+type Vote @entity {
+  id: ID!
+  proposalHash: Proposal
+  approvedVote: String!
+  councillor: Councillor
+  votedYes: String
+  votedNo: String
+  block: BigInt
+}
+
+type Councillor @entity {
+  id: ID!
+  numberOfVotes: Int
+  votes: [Vote] @derivedFrom(field: "councillor")
 }
