@@ -22,7 +22,7 @@ export async function handleCouncilProposedEvent(
 export async function handleCouncilVotedEvent(
   event: SubstrateEvent
 ): Promise<void> {
-  logger.info(JSON.stringify(event.event.data));
+  // logger.info(JSON.stringify(event.event.data));
   const {
     event: {
       data: [councilorId, proposal_hash, approved_vote, numberYes, numberNo],
@@ -40,7 +40,7 @@ export async function handleCouncilVotedEvent(
   voteHistory.votedYes = (numberYes as Int).toNumber();
   voteHistory.votedNo = (numberNo as Int).toNumber();
   voteHistory.block = event.block.block.header.number.toNumber();
-  logger.info(JSON.stringify(voteHistory));
+  // logger.info(JSON.stringify(voteHistory));
   await voteHistory.save();
 }
 
