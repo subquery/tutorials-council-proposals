@@ -1,5 +1,6 @@
 import { SubstrateEvent } from "@subql/types";
-import { Proposal, Vote, Councillor } from "../types/models";
+import { bool, Int } from "@polkadot/types";
+import { Proposal, VoteHistory, Councillor } from "../types/models";
 
 export async function handleCouncilProposedEvent(
   event: SubstrateEvent
@@ -9,8 +10,7 @@ export async function handleCouncilProposedEvent(
       data: [accountId, proposal_index, proposal_hash, threshold],
     },
   } = event;
-  // Retrieve the record by the accountID
-  const proposal = new Proposal(accountId.toString());
+  const proposal = new Proposal(proposal_hash.toString());
   proposal.index = proposal_index.toString();
   proposal.account = accountId.toString();
   proposal.hash = proposal_hash.toString();
@@ -22,22 +22,26 @@ export async function handleCouncilProposedEvent(
 export async function handleCouncilVotedEvent(
   event: SubstrateEvent
 ): Promise<void> {
+  logger.info(JSON.stringify(event.event.data));
   const {
     event: {
-      data: [accountId, proposal_hash, approved_vote, numberYes, numberNo],
+      data: [councilorId, proposal_hash, approved_vote, numberYes, numberNo],
     },
   } = event;
 
-  ensureCouncillor(accountId.toString());
+  await ensureCouncillor(councilorId.toString());
   // Retrieve the record by the accountID
-  const vote = new Vote(accountId.toString());
-  vote.proposalHashId = proposal_hash.toString();
-  vote.approvedVote = approved_vote.toString();
-  vote.councillorId = accountId.toString();
-  vote.votedYes = numberYes.toString();
-  vote.votedNo = numberNo.toString();
-  vote.block = event.block.block.header.number.toBigInt();
-  await vote.save();
+  const voteHistory = new VoteHistory(
+    `${event.block.block.header.number.toNumber()}-${event.idx}`
+  );
+  voteHistory.proposalHashId = proposal_hash.toString();
+  voteHistory.approvedVote = (approved_vote as bool).valueOf();
+  voteHistory.councillorId = councilorId.toString();
+  voteHistory.votedYes = (numberYes as Int).toNumber();
+  voteHistory.votedNo = (numberNo as Int).toNumber();
+  voteHistory.block = event.block.block.header.number.toNumber();
+  logger.info(JSON.stringify(voteHistory));
+  await voteHistory.save();
 }
 
 async function ensureCouncillor(accountId: string): Promise<void> {
@@ -45,6 +49,7 @@ async function ensureCouncillor(accountId: string): Promise<void> {
   let councillor = await Councillor.get(accountId);
   if (!councillor) {
     councillor = new Councillor(accountId);
+    councillor.numberOfVotes = 0;
   }
   councillor.numberOfVotes += 1;
   await councillor.save();
