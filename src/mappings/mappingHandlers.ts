@@ -2,9 +2,7 @@ import { SubstrateEvent } from "@subql/types";
 import { bool, Int } from "@polkadot/types";
 import { Proposal, VoteHistory, Councillor } from "../types/models";
 
-export async function handleCouncilProposedEvent(
-  event: SubstrateEvent
-): Promise<void> {
+export async function handleCouncilProposedEvent(event: SubstrateEvent): Promise<void> {
   const {
     event: {
       data: [accountId, proposal_index, proposal_hash, threshold],
@@ -19,9 +17,7 @@ export async function handleCouncilProposedEvent(
   await proposal.save();
 }
 
-export async function handleCouncilVotedEvent(
-  event: SubstrateEvent
-): Promise<void> {
+export async function handleCouncilVotedEvent(event: SubstrateEvent): Promise<void> {
   // logger.info(JSON.stringify(event.event.data));
   const {
     event: {
