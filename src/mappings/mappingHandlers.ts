@@ -10,7 +10,7 @@ export async function handleCouncilProposedEvent(event: SubstrateEvent): Promise
   } = event;
   const proposal = new Proposal(proposal_hash.toString());
   proposal.index = proposal_index.toString();
-  proposal.account = accountId.toString();
+  proposal.proposer = accountId.toString();
   proposal.hash = proposal_hash.toString();
   proposal.voteThreshold = threshold.toString();
   proposal.block = event.block.block.header.number.toBigInt();

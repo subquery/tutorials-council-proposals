@@ -1,7 +1,7 @@
 type Proposal @entity {
   id: ID!
   index: String!
-  account: String
+  proposer: String
   hash: String
   voteThreshold: String
   block: BigInt
