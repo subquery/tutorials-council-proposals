@@ -1,6 +1,6 @@
 ## Clone this project
 
-git clone https://github.com/subquery/tutorials-account-transfers.git
+git clone [https://github.com/subquery/tutorials-account-transfers.git](https://github.com/subquery/tutorials-council-proposals.git)
 
 ## Install the dependencies
 
